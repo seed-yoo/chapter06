@@ -16,12 +16,13 @@ public class Server {
 
 	public static void main(String[] args) throws IOException {
 
-		Scanner sc = new Scanner(System.in);
+		
+		
 		// 서버소켓생성
 		ServerSocket serverSocket = new ServerSocket();
 
 		// 바인딩
-		serverSocket.bind(new InetSocketAddress("192.168.0.59", 10001));
+		serverSocket.bind(new InetSocketAddress("192.168.0.59", 10000));	// ("본인 컴퓨터 IP주소", port 번호 지정)
 
 		// 서버시작
 		System.out.println("<서버시작>");
@@ -43,16 +44,33 @@ public class Server {
 		OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
 		BufferedWriter bw = new BufferedWriter(osw);
 		
-		// 메세지 받기
-		String msg = br.readLine();
-		System.out.println("받은 메세지: " + msg);
 		
-		// 메세지 보내기
-		System.out.print("입력: ");
-		bw.write(sc.nextLine());
-		bw.newLine();
-		bw.flush();
-
+		// 스캐너 준비
+		Scanner sc = new Scanner(System.in);
+		
+		while (true) {
+			// 메세지 받기
+			String msg = br.readLine();
+			if(msg==null) {
+				break;
+			}
+			
+			System.out.println("받은 메세지: " + msg);
+			// 키보드 입력
+			System.out.print("입력: ");
+			String str = sc.nextLine();
+			
+			
+			// 메세지 보내기
+			bw.write(str);
+			bw.newLine();
+			bw.flush();
+		}
+		
+		System.out.println("=========================================");
+		System.out.println("<서버 종료>");
+		
+		
 		// 닫기
 		bw.close();
 		br.close();

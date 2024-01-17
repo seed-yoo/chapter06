@@ -15,14 +15,14 @@ public class Client {
 
 	public static void main(String[] args) throws IOException {
 
-		Scanner sc = new Scanner(System.in);
+		
 		Socket socket = new Socket();
 
 		System.out.println("<클라이언트 시작>");
 		System.out.println("===========================");
 
 		System.out.println("[서버에 연결을 요청합니다.]");
-		socket.connect(new InetSocketAddress("192.168.0.59", 10001));
+		socket.connect(new InetSocketAddress("192.168.0.59", 10000));	// ("본인 컴퓨터 IP주소", port 번호 지정)
 
 		System.out.println("[서버에 연결 되었습니다.]");
 
@@ -42,21 +42,36 @@ public class Client {
 		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
 		BufferedReader br = new BufferedReader(isr);
 
-		// 메세지 보내기
-		System.out.print("입력: ");
-		bw.write(sc.nextLine());
-		bw.newLine();
-		bw.flush();
-		// 메세지 받기
+		// 스캐너 준비
+		Scanner sc = new Scanner(System.in);
+		while (true) {
+			
+			// 키보드 입력
+			System.out.print("입력: ");
+			String str = sc.nextLine();
+			if("/q".equals(str)) {
+				break;
+			}
+			
+			// 메세지 보내기
+			bw.write(str);
+			bw.newLine();
+			bw.flush();
+			
+			// 메세지 받기
+			String reMsg = br.readLine();
+			System.out.println("Server: " + reMsg);
+			
+		}
 		
-		String reMsg = br.readLine();
-		System.out.println("다시 받은 메세지: " + reMsg);
+		System.out.println("=========================================");
+		System.out.println("<클라이언트 종료>");
 		
 
 		// 닫기
+		sc.close();
 		br.close();
 		bw.close();
 		socket.close();
-		sc.close();
 	}
 }
